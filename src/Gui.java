@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.MouseInfo;
@@ -35,7 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
@@ -43,32 +41,23 @@ public class Gui extends JFrame {
 
 	private int formxcoord = 876, formycoord = 633, tabIndex = 0;
 	private int mousexcoord = 757,  mouseycoord = 482;
-	File settingsFile = new File("loginsettings.txt");
-	private JPanel infoframe = new JPanel();
+	private File settingsFile = new File("loginsettings.txt");
 	private JPanel settingsTab = new JPanel();
+	private EditPanel editPanel = null;
 	private JButton deleteSettingsButton = new JButton("Delete Settings File");
-	private JButton saveButton = new JButton("Save");
-	private JButton dontSaveButton = new JButton("Don't Save");
-	JTextField textField1 = new JTextField();
-	JTextField textField2 = new JTextField();
-	JTextField textField3 = new JTextField();
-	private JLabel label1 = new JLabel("Username:");
-	private JLabel label2 = new JLabel("Password:");
-	private JLabel label3 = new JLabel("Display Name:");
 	private JLabel label4 = new JLabel("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
 	private JLabel label5 = new JLabel("+");
-	JTabbedPane tabbedPane1 = new JTabbedPane();
-	final JButton addNewButton = new JButton("Add New");
-	JCheckBox ObscureInfoCheck = new JCheckBox("Obscure Info In File", true);
+	private JTabbedPane tabbedPane1 = new JTabbedPane();
+	private JButton addNewButton = new JButton("Add New");
+	private JCheckBox ObscureInfoCheck = new JCheckBox("Obscure Info In File", true);
 	final int tabWidth = 50;
-	
 
 	public ArrayList<JButton> buttons = new ArrayList<JButton>();
-	ArrayList<JPanel> tabs = new ArrayList<JPanel>();
+	private ArrayList<JPanel> tabs = new ArrayList<JPanel>();
 
-	LoginButton buttonBeingEdited;
+	private LoginButton buttonBeingEdited;
 
-	MyWindowsTabbedPaneUI myWindowsTabbedPaneUI = new MyWindowsTabbedPaneUI();
+	private MyWindowsTabbedPaneUI myWindowsTabbedPaneUI = new MyWindowsTabbedPaneUI();
 
 	public Gui() {
 
@@ -78,8 +67,48 @@ public class Gui extends JFrame {
 		if (settingsFile.exists()) {
 			readSettings();
 		}
+		
+		setTitle("Jake's Login");
+		setPreferredSize(new Dimension(228, 150));
+		setMinimumSize(new Dimension(228, 150));
+		setMaximumSize(new Dimension(2000, 150));
+		setAlwaysOnTop(true);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		addWindowListener(new WindowAdapter() {
+			
+			@Override
+			public void windowClosing(WindowEvent winEvt) {
+				formxcoord = getLocation().x;
+				formycoord = getLocation().y;
+				if (buttons.size() > 1) {
+					writeSettings();
+				}
+			}
+		});
+		
 		initComponents();
 
+	}
+	
+	public EditPanel getEditPanel() {
+		return editPanel;
+	}
+	
+	public JTabbedPane getTabbedPane1() {
+		return tabbedPane1;
+	}
+	
+	public ArrayList<JButton> getButtons() {
+		return buttons;
+	}
+	
+	public LoginButton getButtonBeingEdited() {
+		return buttonBeingEdited;
+	}
+	
+	public void setButtonBeingEdited(LoginButton buttonBeingEdited) {
+		this.buttonBeingEdited = buttonBeingEdited;
 	}
 
 	public static void main(String[] args) {
@@ -119,15 +148,16 @@ public class Gui extends JFrame {
 			Thread.sleep(100L);
 			robot.keyPress(10);
 			robot.keyRelease(10);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	void openEditor() {
-		tabbedPane1.setVisible(false);
-		infoframe.setVisible(true);
+		remove(tabbedPane1);
+		add(editPanel);
+		validate();//TODO figure out why this is necessary
+		repaint();//TODO figure out why this is necessary
 	}
 	
 	private void sendkeys(String text) {
@@ -135,7 +165,7 @@ public class Gui extends JFrame {
 			Robot robot = new Robot();
 			String uppercase = text.toUpperCase();
 			for (char c : uppercase.toCharArray()) {
-				if (c == '@') {
+				if (c == KeyEvent.VK_AT) {
 					robot.keyPress(KeyEvent.VK_SHIFT);
 					robot.keyPress(KeyEvent.VK_2);
 					robot.keyRelease(KeyEvent.VK_2);
@@ -362,24 +392,7 @@ public class Gui extends JFrame {
 
 	private void initComponents() {
 		
-		setTitle("Jake's Login");
-		setPreferredSize(new Dimension(228, 150));
-		setMinimumSize(new Dimension(228, 150));
-		setMaximumSize(new Dimension(2000, 150));
-		setAlwaysOnTop(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
-		addWindowListener(new WindowAdapter() {
-			
-			@Override
-			public void windowClosing(WindowEvent winEvt) {
-				formxcoord = getLocation().x;
-				formycoord = getLocation().y;
-				if (buttons.size() > 1) {
-					writeSettings();
-				}
-			}
-		});
+		editPanel = new EditPanel(this);
 		
 		tabbedPane1.setUI(myWindowsTabbedPaneUI);
 		tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -394,9 +407,9 @@ public class Gui extends JFrame {
 				buttonBeingEdited = new LoginButton(Gui.this);
 				buttonBeingEdited.setFont(new Font("Tahoma", 1, 8));
 				buttonBeingEdited.setFocusPainted(false);
-				Gui.this.textField1.setText("");
-				Gui.this.textField2.setText("");
-				Gui.this.textField3.setText("");
+				Gui.this.editPanel.getTextField1().setText("");
+				Gui.this.editPanel.getTextField2().setText("");
+				Gui.this.editPanel.getTextField3().setText("");
 				openEditor();
 			}
 
@@ -441,40 +454,14 @@ public class Gui extends JFrame {
 				label5.setVisible(true);
 			}
 		});
+		
 		settingsTab.add(label5);
 
-		infoframe.setLayout(new GridLayout(7, 2));//TODO rewrite using a differnt layout manager
-
-		saveButton.setBounds(10, 95, 90, 20);
-		saveButton.setFocusPainted(false);
-		saveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				saveButtonActionPerformed();
-			}
-		});
-		dontSaveButton.setBounds(105, 95, 100, 20);
-		dontSaveButton.setFocusPainted(false);
-		dontSaveButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dontSaveButtonActionPerformed(e);
-			}
-		});
-		infoframe.add(label1);
-		infoframe.add(textField1);
-		infoframe.add(label2);
-		infoframe.add(textField2);
-		infoframe.add(label3);
-		infoframe.add(textField3);
-		infoframe.add(saveButton);
-		infoframe.add(dontSaveButton);
-
-		add(infoframe);
+		//editPanel.setVisible(false);
+		add(editPanel);
+		
 		add(tabbedPane1);
-		infoframe.setVisible(false);
 
-		infoframe.setBounds(5, 5, 230, 140);
 		tabbedPane1.setSelectedIndex(tabIndex);
 	}
 
@@ -485,57 +472,6 @@ public class Gui extends JFrame {
 			}
 		}
 		return -1;
-	}
-
-	private void saveButtonActionPerformed() {
-
-		//allow user to reset button to blank
-		if ((textField1.getText().isEmpty()) && (textField2.getText().isEmpty()) && 
-				(textField3.getText().isEmpty())) {
-			removeButtonAndUpdateGui(buttonBeingEdited);
-			textField1.setText(null);
-			textField2.setText(null);
-			textField3.setText(null);
-			tabbedPane1.setVisible(true);
-			infoframe.setVisible(false);
-			return;
-		}
-
-		if ((textField1.getText().isEmpty()) || (textField2.getText().isEmpty()) 
-				|| (textField3.getText().isEmpty())) {
-			JOptionPane.showMessageDialog(this, "One or more text boxes are blank.", 
-					"Warning", 
-					0);
-			return;
-		}
-
-		buttonBeingEdited.setText(textField3.getText());
-		buttonBeingEdited.setUsername(textField1.getText());
-		buttonBeingEdited.setPassword(textField2.getText());
-		buttonBeingEdited.setDisplayName(textField3.getText());
-
-		if (!buttons.contains(buttonBeingEdited)) {
-			buttons.add(buttons.size() - 1, buttonBeingEdited);
-		}
-
-
-		int tabbedPane1Index = tabbedPane1.getSelectedIndex();
-		removeTabsAndButtonsFromGui();
-		addTabsAndButtonsToGui();
-		if (tabbedPane1Index > -1 && tabbedPane1Index < tabbedPane1.getTabCount()) {
-			tabbedPane1.setSelectedIndex(tabbedPane1Index);
-		}
-
-		textField1.setText(null);
-		textField2.setText(null);
-		textField3.setText(null);
-		tabbedPane1.setVisible(true);
-		infoframe.setVisible(false);
-	}
-
-	private void dontSaveButtonActionPerformed(ActionEvent e) {
-		tabbedPane1.setVisible(true);
-		infoframe.setVisible(false);
 	}
 
 	private void deleteSettingsButtonActionPerformed(ActionEvent e) {

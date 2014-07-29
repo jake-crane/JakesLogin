@@ -18,10 +18,10 @@ public class MyMenu extends JPopupMenu {
 		editItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				gui.buttonBeingEdited = myButton;
-				gui.textField1.setText(myButton.getUsername());
-				gui.textField2.setText(myButton.getPassword());
-				gui.textField3.setText(myButton.getDisplayName());
+				gui.setButtonBeingEdited(myButton);
+				gui.getEditPanel().getTextField1().setText(myButton.getUsername());
+				gui.getEditPanel().getTextField2().setText(myButton.getPassword());
+				gui.getEditPanel().getTextField3().setText(myButton.getDisplayName());
 				gui.openEditor();
 			}
 
