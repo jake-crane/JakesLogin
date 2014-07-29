@@ -44,16 +44,24 @@ public class Gui extends JFrame {
 	private int formxcoord = 876, formycoord = 633, tabIndex = 0;
 	private int mousexcoord = 757,  mouseycoord = 482;
 	File settingsFile = new File("loginsettings.txt");
-	private JPanel infoframe, settingsTab;
-	private JButton deleteSettingsButton = new JButton();
-	private JButton saveButton = new JButton();
-	private JButton dontSaveButton = new JButton();
-	JTextField textField1,  textField2, textField3;
-	private JLabel label1, label2, label3, label4, label5;
-	JTabbedPane tabbedPane1;
+	private JPanel infoframe = new JPanel();
+	private JPanel settingsTab = new JPanel();
+	private JButton deleteSettingsButton = new JButton("Delete Settings File");
+	private JButton saveButton = new JButton("Save");
+	private JButton dontSaveButton = new JButton("Don't Save");
+	JTextField textField1 = new JTextField();
+	JTextField textField2 = new JTextField();
+	JTextField textField3 = new JTextField();
+	private JLabel label1 = new JLabel("Username:");
+	private JLabel label2 = new JLabel("Password:");
+	private JLabel label3 = new JLabel("Display Name:");
+	private JLabel label4 = new JLabel("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
+	private JLabel label5 = new JLabel("+");
+	JTabbedPane tabbedPane1 = new JTabbedPane();
 	final JButton addNewButton = new JButton("Add New");
 	JCheckBox ObscureInfoCheck = new JCheckBox("Obscure Info In File", true);
 	final int tabWidth = 50;
+	
 
 	public ArrayList<JButton> buttons = new ArrayList<JButton>();
 	ArrayList<JPanel> tabs = new ArrayList<JPanel>();
@@ -77,7 +85,6 @@ public class Gui extends JFrame {
 	public static void main(String[] args) {
 
 		try {
-			//UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,9 +182,6 @@ public class Gui extends JFrame {
 		sb.append(System.lineSeparator());
 		sb.append("Tab Index:" + tabbedPane1.getSelectedIndex());
 		sb.append(System.lineSeparator());
-		//sb.append("Window Width:" + getWidth());
-		//sb.append(System.lineSeparator());
-		//sb.append("ObscureInfoCheck.isSelected():" + ObscureInfoCheck.isSelected());
 
 		return sb.toString();
 
@@ -202,7 +206,7 @@ public class Gui extends JFrame {
 				ObscureInfoCheck.setSelected(false);
 			}
 
-			BufferedReader input = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data)));
+			try (BufferedReader input = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(data)))) {
 
 			input.readLine();//System.out.println("skipping " + input.readLine());
 			String line = input.readLine();
@@ -257,8 +261,7 @@ public class Gui extends JFrame {
 			} catch (Exception e) {
 				System.out.println("invalid settings file");
 			}
-			input.close();
-
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -285,69 +288,19 @@ public class Gui extends JFrame {
 
 	public void addTabsAndButtonsToGui() {
 
-		/*System.out.println("info:");
-
-		System.out.println("buttons:");
-		for (int i = 0; i < buttons.size(); i++) {
-			System.out.println(buttons.get(i).getText());
-		}
-
-		System.out.println("tabs:");
-		for (int i = 0; i < tabs.size(); i++) {
-			System.out.println(tabs.get(i));
-		}
-
-		System.out.println("tabbedPane1.getComponents():");
-		for (int i = 0; i < tabbedPane1.getComponents().length; i++) {
-			System.out.println(tabbedPane1.getComponents()[i]);
-		}
-		System.out.println();
-
-		/*System.out.println("tabbedPane1.getComponents():");
-		for (int i = 0; i < this.getComponents().length; i++) {
-			System.out.println(tabbedPane1.getComponents()[i]);
-		}*/
-
-		//int x = 10, y = 5, width = 90, height = 22;
-		//int anchor = GridBagConstraints.LAST_LINE_END;
 		int gridx = 0, gridy = 0;
 		for (int i = 0; i < buttons.size(); i++) {
-
-			/*if (buttons.get(i) instanceof LoginButton) {
-				buttons.add(i, new LoginButton());
-				buttons.get(i).setText("Login " + (i + 1));
-			}*/
 
 			buttons.get(i).setFont(new Font("Tahoma", 1, 8));
 			buttons.get(i).setPreferredSize(new Dimension(90, 22));
 			buttons.get(i).setMinimumSize(new Dimension(90, 22));
-			//buttons.get(i).setBounds(x, y, width, height);
 			buttons.get(i).setFocusPainted(false);
-
-			/*if (anchor == GridBagConstraints.FIRST_LINE_START) {
-				anchor = GridBagConstraints.LINE_START;
-			} else if (anchor == GridBagConstraints.LINE_START) {
-				anchor = GridBagConstraints.LAST_LINE_START;
-			} else if (anchor == GridBagConstraints.LAST_LINE_START) {
-				anchor = GridBagConstraints.FIRST_LINE_START;
-			} else if (anchor == GridBagConstraints.FIRST_LINE_START) {
-				anchor = GridBagConstraints.LINE_END;
-			} else if (anchor == GridBagConstraints.LINE_END) {
-				anchor = GridBagConstraints.LAST_LINE_END;
-			} else if (anchor == GridBagConstraints.LAST_LINE_END) {
-				anchor = GridBagConstraints.FIRST_LINE_START;
-			}*/
 
 			GridBagConstraints c = new GridBagConstraints();
 
 			c.insets = new Insets(3,8,0,0); 
-			//c.weightx = 0.00000000000000000000000001;
-			//c.weighty = 0.5;
-			//c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridx = gridx;
 			c.gridy = gridy;
-			//c.gridwidth = 1;
-			//c.anchor = anchor;
 
 			if (gridx ==0) {
 				gridx = 1;
@@ -359,20 +312,6 @@ public class Gui extends JFrame {
 				}
 			}
 
-			/*if (x == 10) {
-				x = 110;
-			} else {
-				x = 10;
-				if (y == 5) {
-					y = 30;				
-				} else if ( y == 30) {
-					y = 55;
-				} else if (y == 55) {
-					y = 5;
-				}
-			}*/
-
-			//System.out.println("adding " + buttons.get(i).getText() + " to tab");
 			for (int j = 0; j < tabs.size(); j++) {
 				if (tabs.get(j).getComponentCount() < 6) {
 					tabs.get(j).add(buttons.get(i), c);
@@ -399,25 +338,8 @@ public class Gui extends JFrame {
 
 		tabbedPane1.addTab("Settings", settingsTab);
 
-		//setPreferredSize(new Dimension(myWindowsTabbedPaneUI.getWidthofTabRow(tabbedPane1) + 15, getHeight()));
-		//setMinimumSize(new Dimension(myWindowsTabbedPaneUI.getWidthofTabRow(tabbedPane1) + 15, getHeight()));
-		//pack();
-		//System.out.println("tabbedPane1.getLocation().x: " + tabbedPane1.getLocation().x);
 		setSize(myWindowsTabbedPaneUI.getWidthofTabRow(tabbedPane1) + 16, getHeight());
 	}
-
-	/*@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		System.out.println("current width: " + getWidth());
-		//System.out.println("current height: " + getHeight());
-		//System.out.println("max height: " + getMaximumSize().height);
-		if (getHeight() > getMaximumSize().height) {
-			setVisible(false);
-			setSize(getWidth(), getMaximumSize().height);
-			setVisible(true);
-		}
-	}*/
 
 	private void writeSettings() {
 
@@ -439,32 +361,16 @@ public class Gui extends JFrame {
 	}
 
 	private void initComponents() {
-		tabbedPane1 = new JTabbedPane();
-		tabbedPane1.setUI(myWindowsTabbedPaneUI);
-		tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		settingsTab = new JPanel();
-		textField1 = new JTextField();
-		textField2 = new JTextField();
-		textField3 = new JTextField();
-		infoframe = new JPanel();
-		label1 = new JLabel();
-		label2 = new JLabel();
-		label3 = new JLabel();
-		label4 = new JLabel();
-		label5 = new JLabel();
-
+		
 		setTitle("Jake's Login");
 		setPreferredSize(new Dimension(228, 150));
 		setMinimumSize(new Dimension(228, 150));
 		setMaximumSize(new Dimension(2000, 150));
-		//setBounds(formxcoord, formycoord, 228, 150);
 		setAlwaysOnTop(true);
-		//setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		//System.out.println("getLayout(): " + getLayout());
-
+		
 		addWindowListener(new WindowAdapter() {
-
+			
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				formxcoord = getLocation().x;
@@ -474,7 +380,9 @@ public class Gui extends JFrame {
 				}
 			}
 		});
-
+		
+		tabbedPane1.setUI(myWindowsTabbedPaneUI);
+		tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
 		JPanel tab1 = new JPanel();
 		tab1.setLayout(new GridBagLayout());
@@ -503,28 +411,28 @@ public class Gui extends JFrame {
 		ObscureInfoCheck.setBounds(3, 20, 160, 25);
 		settingsTab.add(ObscureInfoCheck);
 
-		label4.setText("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
 		label4.setBounds(5, 0, 160, 25);
 		settingsTab.add(label4);
 
-		deleteSettingsButton.setText("Delete Settings File");
 		deleteSettingsButton.setFont(new Font("Tahoma", 1, 9));
 		deleteSettingsButton.setBounds(40, 55, 130, 22);
 		deleteSettingsButton.setFocusPainted(false);
 		deleteSettingsButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteSettingsButtonActionPerformed(e);
 			}
 		});
 		settingsTab.add(deleteSettingsButton);
 
-		label5.setText("+");
 		label5.setBounds(160, 0, 25, 25);
 		label5.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				setCursor(new Cursor(1));
 				label5.setVisible(false);
 			}
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				setCursor(new Cursor(0));
 				mousexcoord = MouseInfo.getPointerInfo().getLocation().x;
@@ -537,28 +445,18 @@ public class Gui extends JFrame {
 
 		infoframe.setLayout(new GridLayout(7, 2));//TODO rewrite using a differnt layout manager
 
-		label1.setText("Username:");
-		//label1.setBounds(10, 0, 160, 15);
-		//textField1.setBounds(10, 15, 180, 16);
-		label2.setText("Password:");
-		//label2.setBounds(10, 30, 155, 15);
-		//textField2.setBounds(10, 45, 180, 16);
-		label3.setText("Display Name:");
-		//label3.setBounds(10, 60, 145, 15);
-		//textField3.setBounds(10, 75, 180, 16);
-
-		saveButton.setText("Save");
 		saveButton.setBounds(10, 95, 90, 20);
 		saveButton.setFocusPainted(false);
 		saveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				saveButtonActionPerformed();
 			}
 		});
-		dontSaveButton.setText("Don't Save");
 		dontSaveButton.setBounds(105, 95, 100, 20);
 		dontSaveButton.setFocusPainted(false);
 		dontSaveButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				dontSaveButtonActionPerformed(e);
 			}
@@ -577,8 +475,6 @@ public class Gui extends JFrame {
 		infoframe.setVisible(false);
 
 		infoframe.setBounds(5, 5, 230, 140);
-		//tabbedPane1.setBounds(5, 5, 214, 112);
-		//tabbedPane1.setPreferredSize(new Dimension(214, 112));
 		tabbedPane1.setSelectedIndex(tabIndex);
 	}
 
