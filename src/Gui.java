@@ -165,7 +165,7 @@ public class Gui extends JFrame {
 			Robot robot = new Robot();
 			String uppercase = text.toUpperCase();
 			for (char c : uppercase.toCharArray()) {
-				if (c == KeyEvent.VK_AT) {
+				if (c == '@') {
 					robot.keyPress(KeyEvent.VK_SHIFT);
 					robot.keyPress(KeyEvent.VK_2);
 					robot.keyRelease(KeyEvent.VK_2);
