@@ -67,16 +67,16 @@ public class Gui extends JFrame {
 		if (settingsFile.exists()) {
 			readSettings();
 		}
-		
+
 		setTitle("Jake's Login");
 		setPreferredSize(new Dimension(228, 150));
 		setMinimumSize(new Dimension(228, 150));
 		setMaximumSize(new Dimension(2000, 150));
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		
+
 		addWindowListener(new WindowAdapter() {
-			
+
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				formxcoord = getLocation().x;
@@ -86,27 +86,27 @@ public class Gui extends JFrame {
 				}
 			}
 		});
-		
+
 		initComponents();
 
 	}
-	
+
 	public EditPanel getEditPanel() {
 		return editPanel;
 	}
-	
+
 	public JTabbedPane getTabbedPane1() {
 		return tabbedPane1;
 	}
-	
+
 	public ArrayList<JButton> getButtons() {
 		return buttons;
 	}
-	
+
 	public LoginButton getButtonBeingEdited() {
 		return buttonBeingEdited;
 	}
-	
+
 	public void setButtonBeingEdited(LoginButton buttonBeingEdited) {
 		this.buttonBeingEdited = buttonBeingEdited;
 	}
@@ -134,17 +134,17 @@ public class Gui extends JFrame {
 			robot.mouseMove(mousexcoord, mouseycoord);
 			robot.mousePress(16);
 			robot.mouseRelease(16);
-			Thread.currentThread(); 
+			Thread.currentThread();
 			Thread.sleep(350L);
 			sendkeys(username);
-			Thread.currentThread(); 
+			Thread.currentThread();
 			Thread.sleep(150L);
 			robot.keyPress(10);
 			robot.keyRelease(10);
-			Thread.currentThread(); 
+			Thread.currentThread();
 			Thread.sleep(100L);
 			sendkeys(password);
-			Thread.currentThread(); 
+			Thread.currentThread();
 			Thread.sleep(100L);
 			robot.keyPress(10);
 			robot.keyRelease(10);
@@ -159,7 +159,7 @@ public class Gui extends JFrame {
 		validate();//TODO figure out why this is necessary
 		repaint();//TODO figure out why this is necessary
 	}
-	
+
 	private void sendkeys(String text) {
 		try {
 			Robot robot = new Robot();
@@ -216,7 +216,7 @@ public class Gui extends JFrame {
 		return sb.toString();
 
 	}
-	
+
 	private static byte[] getFlippedBytes(byte[] bytes) {
 		for (int i = 0; i < bytes.length; i++) {
 			bytes[i] = (byte) (Integer.reverse(bytes[i]) >>> (Integer.SIZE - Byte.SIZE));
@@ -306,7 +306,7 @@ public class Gui extends JFrame {
 
 	/**
 	 * leaves 1 tab that gets cleared
-	 * 
+	 *
 	 */
 	public void removeTabsAndButtonsFromGui() {
 		while (tabs.size() > 1) {
@@ -328,13 +328,13 @@ public class Gui extends JFrame {
 
 			GridBagConstraints c = new GridBagConstraints();
 
-			c.insets = new Insets(3,8,0,0); 
+			c.insets = new Insets(3,8,0,0);
 			c.gridx = gridx;
 			c.gridy = gridy;
 
 			if (gridx ==0) {
 				gridx = 1;
-			} else {				
+			} else {
 				gridx = 0;
 				gridy++;
 				if (gridy > 2) {
@@ -374,9 +374,9 @@ public class Gui extends JFrame {
 	private void writeSettings() {
 
 		try (BufferedWriter output = new BufferedWriter(new FileWriter(settingsFile))) {
-			
+
 			String data = getData();
-			
+
 			if (ObscureInfoCheck.isSelected()) {
 				byte[] bytes = data.getBytes();
 				bytes = getFlippedBytes(bytes);
@@ -384,16 +384,16 @@ public class Gui extends JFrame {
 			} else {
 				output.write(data);
 			}
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void initComponents() {
-		
+
 		editPanel = new EditPanel(this);
-		
+
 		tabbedPane1.setUI(myWindowsTabbedPaneUI);
 		tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -454,12 +454,12 @@ public class Gui extends JFrame {
 				label5.setVisible(true);
 			}
 		});
-		
+
 		settingsTab.add(label5);
 
 		//editPanel.setVisible(false);
 		add(editPanel);
-		
+
 		add(tabbedPane1);
 
 		tabbedPane1.setSelectedIndex(tabIndex);
@@ -476,22 +476,22 @@ public class Gui extends JFrame {
 
 	private void deleteSettingsButtonActionPerformed(ActionEvent e) {
 		if (settingsFile.exists()) {
-			int response = JOptionPane.showConfirmDialog(null, 
-					"Would you like to delete it?", "old Settings file found.", 
+			int response = JOptionPane.showConfirmDialog(null,
+					"Would you like to delete it?", "old Settings file found.",
 					0);
 			if (response == JOptionPane.YES_OPTION) {
 				settingsFile.delete();
-				JOptionPane.showMessageDialog(this, "Settings file has been deleted.", 
-						"It's gone.", 
+				JOptionPane.showMessageDialog(this, "Settings file has been deleted.",
+						"It's gone.",
 						-1);
 			} else {
-				JOptionPane.showMessageDialog(this, "Settings file has been kept.", 
-						"File safe.", 
+				JOptionPane.showMessageDialog(this, "Settings file has been kept.",
+						"File safe.",
 						-1);
 			}
 		} else {
-			JOptionPane.showMessageDialog(this, "Settings file does not exist", 
-					"File Not Found", 
+			JOptionPane.showMessageDialog(this, "Settings file does not exist",
+					"File Not Found",
 					0);
 		}
 	}

@@ -32,8 +32,8 @@ public class MyMenu extends JPopupMenu {
 		deleteItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int response = JOptionPane.showConfirmDialog(null, 
-						"Are you sure You want to delete the account " + myButton.getDisplayName() + "?", "Permenently delete Account?", 
+				int response = JOptionPane.showConfirmDialog(null,
+						"Are you sure You want to delete the account " + myButton.getDisplayName() + "?", "Permenently delete Account?",
 						0);
 				if (response == JOptionPane.YES_OPTION) {
 					gui.removeButtonAndUpdateGui(myButton);
