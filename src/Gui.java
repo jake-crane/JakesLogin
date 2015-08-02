@@ -170,6 +170,10 @@ public class Gui extends JFrame {
 					robot.keyPress(KeyEvent.VK_2);
 					robot.keyRelease(KeyEvent.VK_2);
 					robot.keyRelease(KeyEvent.VK_SHIFT);
+				} else if (c == '_') {
+					robot.keyPress(KeyEvent.VK_SHIFT);
+					robot.keyPress(KeyEvent.VK_MINUS);
+					robot.keyRelease(KeyEvent.VK_SHIFT);
 				} else {
 					robot.keyPress(c);
 					robot.keyRelease(c);
