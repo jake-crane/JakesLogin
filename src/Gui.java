@@ -1,7 +1,6 @@
 import java.awt.AWTException;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,7 +33,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
 
 @SuppressWarnings("serial")
 public class Gui extends JFrame {
@@ -451,15 +449,6 @@ public class Gui extends JFrame {
 		add(tabbedPane1);
 
 		tabbedPane1.setSelectedIndex(tabIndex);
-	}
-
-	int getButtonNumber(LoginButton button) {
-		for (int i = 0; i < buttons.size(); i++) {
-			if (buttons.get(i) == button) {
-				return i + 1;
-			}
-		}
-		return -1;
 	}
 
 	private void deleteSettingsButtonActionPerformed(ActionEvent e) {
