@@ -40,11 +40,11 @@ public class Gui extends JFrame {
 	private int formxcoord = 876, formycoord = 633, tabIndex = 0;
 	private int mousexcoord = 757,  mouseycoord = 482;
 	private File settingsFile = new File("loginsettings.txt");
-	private JPanel settingsTab = new JPanel();
+	private JPanel settingsTab = new JPanel(new GridBagLayout());
 	private EditPanel editPanel = null;
 	private JButton deleteSettingsButton = new JButton("Delete Settings File");
-	private JLabel label4 = new JLabel("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
-	private JLabel label5 = new JLabel("+");
+	private JLabel mouseCoordinateLabel = new JLabel("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
+	private JLabel crosshairLabel = new JLabel("+");
 	private JTabbedPane tabbedPane1 = new JTabbedPane();
 	private JButton addNewButton = new JButton("Add New");
 	private JCheckBox ObscureInfoCheck = new JCheckBox("Obscure Info In File", true);
@@ -334,8 +334,7 @@ public class Gui extends JFrame {
 					break;
 				}
 				if (j == tabs.size() - 1) {
-					JPanel newTab = new JPanel();
-					newTab.setLayout(new GridBagLayout());
+					JPanel newTab = new JPanel(new GridBagLayout());
 					newTab.add(buttons.get(i), c);
 					tabs.add(newTab);
 					tabbedPane1.add(newTab);
@@ -383,8 +382,7 @@ public class Gui extends JFrame {
 		tabbedPane1.setUI(myWindowsTabbedPaneUI);
 		tabbedPane1.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-		JPanel tab1 = new JPanel();
-		tab1.setLayout(new GridBagLayout());
+		JPanel tab1 = new JPanel(new GridBagLayout());
 		tabs.add(tab1);
 
 		addNewButton.addActionListener(new ActionListener() {
@@ -405,13 +403,22 @@ public class Gui extends JFrame {
 
 		addTabsAndButtonsToGui();
 
-		settingsTab.setLayout(null);//TODO rewrite using a layout manager
+		GridBagConstraints obscureInfoCheckGridBagConstraints = new GridBagConstraints();
+		obscureInfoCheckGridBagConstraints.gridx = 0;
+		obscureInfoCheckGridBagConstraints.gridy = 1;
+		obscureInfoCheckGridBagConstraints.insets = new Insets(2, 0, 2, 0);
+		settingsTab.add(ObscureInfoCheck, obscureInfoCheckGridBagConstraints);
 
-		ObscureInfoCheck.setBounds(3, 20, 160, 25);
-		settingsTab.add(ObscureInfoCheck);
-
-		label4.setBounds(5, 0, 160, 25);
-		settingsTab.add(label4);
+		JPanel mouseCoordinatePanel = new JPanel(new GridBagLayout());
+		GridBagConstraints mouseCoordinatePanelConstraints = new GridBagConstraints();
+		mouseCoordinatePanelConstraints.gridx = 0;
+		mouseCoordinatePanelConstraints.gridy = 0;
+		
+		GridBagConstraints mouseCoordinateLabelGridBagConstraints = new GridBagConstraints();
+		mouseCoordinateLabelGridBagConstraints.gridx = 0;
+		mouseCoordinateLabelGridBagConstraints.gridy = 0;
+		mouseCoordinateLabelGridBagConstraints.insets = new Insets(2, 0, 2, 0);
+		mouseCoordinatePanel.add(mouseCoordinateLabel, mouseCoordinateLabelGridBagConstraints);
 
 		deleteSettingsButton.setFont(new Font("Tahoma", 1, 9));
 		deleteSettingsButton.setBounds(40, 55, 130, 22);
@@ -422,26 +429,34 @@ public class Gui extends JFrame {
 				deleteSettingsButtonActionPerformed(e);
 			}
 		});
-		settingsTab.add(deleteSettingsButton);
+		GridBagConstraints deleteSettingsButtonGridBagConstraints = new GridBagConstraints();
+		deleteSettingsButtonGridBagConstraints.gridx = 0;
+		deleteSettingsButtonGridBagConstraints.gridy = 2;
+		deleteSettingsButtonGridBagConstraints.insets = new Insets(5, 0, 2, 0);
+		settingsTab.add(deleteSettingsButton, deleteSettingsButtonGridBagConstraints);
 
-		label5.setBounds(160, 0, 25, 25);
-		label5.addMouseListener(new MouseAdapter() {
+		crosshairLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				setCursor(new Cursor(1));
-				label5.setVisible(false);
+				crosshairLabel.setVisible(false);
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				setCursor(new Cursor(0));
 				mousexcoord = MouseInfo.getPointerInfo().getLocation().x;
 				mouseycoord = MouseInfo.getPointerInfo().getLocation().y;
-				label4.setText("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
-				label5.setVisible(true);
+				mouseCoordinateLabel.setText("Mouse coordinates: " + mousexcoord + "," + mouseycoord);
+				crosshairLabel.setVisible(true);
 			}
 		});
+		GridBagConstraints crosshairLabelGridBagConstraints = new GridBagConstraints();
+		crosshairLabelGridBagConstraints.gridx = 1;
+		crosshairLabelGridBagConstraints.gridy = 0;
+		crosshairLabelGridBagConstraints.insets = new Insets(2, 10, 2, 0);
+		mouseCoordinatePanel.add(crosshairLabel, crosshairLabelGridBagConstraints);
 
-		settingsTab.add(label5);
+		settingsTab.add(mouseCoordinatePanel, mouseCoordinatePanelConstraints);
 
 		//editPanel.setVisible(false);
 		add(editPanel);

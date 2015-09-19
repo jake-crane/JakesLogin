@@ -12,9 +12,8 @@ public class LoginButton extends JButton {
 
 
 	public LoginButton(final Gui gui) {
-		final LoginButton myButton = this;
 
-		setComponentPopupMenu(new MyMenu(myButton, gui));
+		setComponentPopupMenu(new MyMenu(this, gui));
 
 		this.addActionListener(new ActionListener() {
 			@Override

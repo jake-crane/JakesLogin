@@ -8,11 +8,7 @@ import javax.swing.JPopupMenu;
 @SuppressWarnings("serial")
 public class MyMenu extends JPopupMenu {
 
-	LoginButton myButton;
-
 	public MyMenu(final LoginButton myButton, final Gui gui) {
-
-		this.myButton = myButton;
 
 		JMenuItem editItem = new JMenuItem("edit");
 		editItem.addActionListener(new ActionListener() {
