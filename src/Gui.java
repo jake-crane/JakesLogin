@@ -68,7 +68,7 @@ public class Gui extends JFrame {
 
 		setTitle("Jake's Login");
 		setPreferredSize(new Dimension(228, 150));
-		setMinimumSize(new Dimension(228, 150));
+		setMinimumSize(new Dimension(247, 150));
 		setMaximumSize(new Dimension(2000, 150));
 		setAlwaysOnTop(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
